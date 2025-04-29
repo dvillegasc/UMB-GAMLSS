@@ -5,6 +5,11 @@ dUMB <- function(y, theta, log = FALSE) {
   log_term <- log(1 / y)
   log_density <- 0.5 * log(2 / pi) + 2 * log(log_term) - 3 * log(theta) - log(y) - (log_term^2) / (2 * theta^2)
   
+  
+  #pdensity <- (sqrt(2 / pi) * log_term * exp(-log_term^2 / (2 * theta^2))) / ((theta^3)* y)
+  #log_density <- log(pdensity)
+  
+  
   if (log) {
     return(log_density)
   } else {
@@ -18,12 +23,13 @@ pUMB <- function(y, theta, lower.tail = TRUE, log.p = FALSE) {
   if (any(y <= 0 | y >= 1)) return(if (log.p) -Inf else 0)
   
   log_term <- log(1 / y)
-  sqrt_ln2 <- sqrt(log_term^2)
+  sqrt_log2 <- sqrt(log_term^2)
   erf_arg <- log_term / (sqrt(2) * theta)
+  erf <- function(x) 2 * pnorm(x * sqrt(2)) - 1
   erf_part <- erf(erf_arg)
   
-  term1 <- sqrt_ln2 * erf_part / log_term
-  term2 <- sqrt(2 / pi) * log_term * exp(-log_term^2 / (2 * theta^2)) / theta
+  term1 <- (sqrt_log2 * erf_part) / log_term
+  term2 <- (sqrt(2 / pi) * log_term * exp(-log_term^2 / (2 * theta^2))) / theta
   
   cdf <- 1 - term1 + term2
   
@@ -61,4 +67,21 @@ rUMB <- function(n, theta) {
 }
 
 
-integrate(dUMB, lower=0, upper=1, theta=1) 
+integrate(function(y) dUMB(y, theta=1), lower=0, upper=1)
+
+
+integrate(function(y) dUMB(y, theta = 3), lower = 0, upper = 1)
+
+sapply(c(1, 2, 3, 5, 10), function(th) {
+  integrate(function(y) dUMB(y, theta = th), lower = 0, upper = 1)$value
+})
+
+
+
+
+
+curve(function(x) dUMB(x, theta = 3), from = 0, to = 1, col = "blue", lwd = 2, ylab = "Density")
+curve(dbeta(x, 2, 5), add = TRUE, col = "red", lty = 2)
+legend("topright", legend = c("UMB (theta=3)", "Beta(2,5)"), col = c("blue", "red"), lty = 1:2, bty = "n")
+
+
