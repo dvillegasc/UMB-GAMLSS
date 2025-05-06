@@ -2,6 +2,7 @@
 
 #Esta distribución solo tiene un parametro de escala (σ).
 #La distribución es continua.
+#La funcion de enlace para el unico parametro que tenemos es "Log".
 
 
 
@@ -182,7 +183,7 @@ dUMB <- function(x, mu = 0, sigma = 1, nu = 1, tau = 1, log = FALSE) {
 }
 
 # Derivada  respecto a sigma (dldd)
-dldd_manual <- function(x, mu = 0, sigma = 1, nu = 1, tau = 1) {
+dldd_manual <- function(x, mu = 1, sigma = 1, nu = 1, tau = 1) {
   L <- log(1 / x)
   return(-3 / sigma + (L^2) / sigma^3)
 }
