@@ -3,8 +3,7 @@
 #Esta distribución solo tiene un parametro de escala (σ).
 #La distribución es continua.
 #La funcion de enlace para el unico parametro que tenemos es "Log".
-#install.packages("pracma") #Libreria para tener la funcion erf
-library(pracma)
+
 
 
 ## The probability density function
@@ -34,12 +33,11 @@ pUMB <- function(q, mu = 1, lower.tail = TRUE, log.p = FALSE) {
   sapply(q, function(qi) {
     if (qi <= 0 || qi >= 1) return(if (log.p) -Inf else 0)
     
-    log_term <- log(1 / qi)
-    erf_arg <- (sqrt(log_term^2)) / (sqrt(2) * mu)
-
+    L <- log(1/qi)
+    absL <- abs(L)
     
-    term1 <- (sqrt(log_term^2) * erf(erf_arg)) / log_term
-    term2 <- (sqrt(2 / pi) * log_term * exp(-log_term^2 / (2 * mu^2))) / mu
+    term1 <- (absL * pracma::erf(absL/(sqrt(2)*mu))) / L
+    term2 <- (sqrt(2/pi) * L * exp(-L^2/(2*mu^2))) / mu
     
     cdf <- 1 - term1 + term2
     if (!lower.tail) cdf <- 1 - cdf

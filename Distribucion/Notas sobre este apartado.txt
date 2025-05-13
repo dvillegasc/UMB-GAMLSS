@@ -1,0 +1,23 @@
+-La UMB sigue en desarrollo.
+
+-La dUMB con y sin erf function se realizaron con el proposito de verificar que no hayan cambios al implementar 
+la ecuacion de erf o la libreria pracma para la funcion erf.
+
+-De lo anterior, se comprobo que es indiferente usar la ecuacion erf o la libreria pracma
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

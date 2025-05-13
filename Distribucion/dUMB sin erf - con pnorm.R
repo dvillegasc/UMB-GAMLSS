@@ -3,8 +3,7 @@
 #Esta distribución solo tiene un parametro de escala (σ).
 #La distribución es continua.
 #La funcion de enlace para el unico parametro que tenemos es "Log".
-#install.packages("pracma") #Libreria para tener la funcion erf
-library(pracma)
+
 
 
 ## The probability density function
@@ -35,10 +34,10 @@ pUMB <- function(q, mu = 1, lower.tail = TRUE, log.p = FALSE) {
     if (qi <= 0 || qi >= 1) return(if (log.p) -Inf else 0)
     
     log_term <- log(1 / qi)
-    erf_arg <- (sqrt(log_term^2)) / (sqrt(2) * mu)
-
+    erf_arg <- log_term / (sqrt(2) * mu)
+    erf_part <- erf(erf_arg)
     
-    term1 <- (sqrt(log_term^2) * erf(erf_arg)) / log_term
+    term1 <- (sqrt(log_term^2) * erf_part) / log_term
     term2 <- (sqrt(2 / pi) * log_term * exp(-log_term^2 / (2 * mu^2))) / mu
     
     cdf <- 1 - term1 + term2
@@ -75,7 +74,7 @@ qUMB <- function(p, mu = 1) {
 rUMB <- function(n = 1, mu = 1) {
   if (mu <= 0) stop("parameter mu must be positive!")
   u <- runif(n)
-  qUMB(u, mu = mu)
+  qUMB(u, mu)
 }
 
 
@@ -104,28 +103,29 @@ qUMB(p= 0.5, mu = 1)
 rUMB(n = 3, mu = 0.3)
 
 
+
 #-----------------------Graficas---------------------------------------
 
 
 ## The probability density function
 curve(dUMB(x, mu= 0.10),
       from=0, to=1, col="blue", las=1, ylab="Pdf of the UMB",
-      ylim = c(0,15), add=TRUE, )
+      ylim = c(0,15), add=TRUE, lwd = 2 )
 
 curve(dUMB(x, mu= 0.25),
       from=0, to=1, col="red", las=1, 
-      ylim = c(0,15), add=TRUE)
+      ylim = c(0,15), add=TRUE, lwd = 2)
 
 curve(dUMB(x, mu= 0.50), las=1, 
       ylim = c(0,15),
-      add=TRUE, col="green")
+      add=TRUE, col="green", lwd = 2)
 
 curve(dUMB(x, mu= 1), las=1, 
       from=0, to=1, col="violetred1", las=1, 
-      ylim = c(0,15), add=TRUE)
+      ylim = c(0,15), add=TRUE, lwd = 2)
 
 curve(dUMB(x, mu= 2), ylim = c(0,15),
-      add=TRUE, col="black")
+      add=TRUE, col="black", lwd = 2)
 
 legend("topright", col=c("blue3", "red","green", "violetred1", "black"), lty=1, bty="n",
        legend=c("mu=0.10",
@@ -138,19 +138,19 @@ legend("topright", col=c("blue3", "red","green", "violetred1", "black"), lty=1, 
 
 ## The cumulative distribution function
 curve(pUMB(x, mu=0.10), from=0, to=1,
-      col="black", las=1, ylab="Cdf of the UMB")
+      col="black", las=1, ylab="Cdf of the UMB", lwd = 2)
 
 curve(pUMB(x, mu=0.25), from=0, to=1,
-      add=TRUE, col="green", las=1)
+      add=TRUE, col="green", las=1, lwd = 2)
 
 curve(pUMB(x, mu=0.50), from=0, to=1,
-      add=TRUE, col="violetred1", las=1)
+      add=TRUE, col="violetred1", las=1, lwd = 2)
 
 curve(pUMB(x, mu=0.70), from=0, to=1,
-      add=TRUE, col="red", las=1) 
+      add=TRUE, col="red", las=1, lwd = 2) 
 
 curve(pUMB(x, mu=0.90), from=0, to=1,
-      add=TRUE, col="blue3", las=1)
+      add=TRUE, col="blue3", las=1, lwd = 2)
 
 
 legend("topleft", col=c("black","green","violetred1", "red", "blue3"), lty=1, bty="n",
@@ -214,7 +214,7 @@ dldd_compu <- function(x, mu) {
 
 # Prueba con valores válidos de la distribución UMB (x > 0)
 x     <- c(0.1, 0.2, 0.5, 0.9)  # Valores > 0
-mu    <- 1.5
+mu    <- 0.3
 
 
 manual <- dldd_manual(x=x, mu=mu)

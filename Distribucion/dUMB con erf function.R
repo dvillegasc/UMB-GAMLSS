@@ -34,12 +34,11 @@ pUMB <- function(q, mu = 1, lower.tail = TRUE, log.p = FALSE) {
   sapply(q, function(qi) {
     if (qi <= 0 || qi >= 1) return(if (log.p) -Inf else 0)
     
-    log_term <- log(1 / qi)
-    erf_arg <- (sqrt(log_term^2)) / (sqrt(2) * mu)
-
+    L <- log(1/qi)
+    absL <- abs(L)
     
-    term1 <- (sqrt(log_term^2) * erf(erf_arg)) / log_term
-    term2 <- (sqrt(2 / pi) * log_term * exp(-log_term^2 / (2 * mu^2))) / mu
+    term1 <- (absL * pracma::erf(absL/(sqrt(2)*mu))) / L
+    term2 <- (sqrt(2/pi) * L * exp(-L^2/(2*mu^2))) / mu
     
     cdf <- 1 - term1 + term2
     if (!lower.tail) cdf <- 1 - cdf
@@ -110,22 +109,22 @@ rUMB(n = 3, mu = 0.3)
 ## The probability density function
 curve(dUMB(x, mu= 0.10),
       from=0, to=1, col="blue", las=1, ylab="Pdf of the UMB",
-      ylim = c(0,15), add=TRUE, )
+      ylim = c(0,15), add=TRUE, lwd = 2 )
 
 curve(dUMB(x, mu= 0.25),
       from=0, to=1, col="red", las=1, 
-      ylim = c(0,15), add=TRUE)
+      ylim = c(0,15), add=TRUE, lwd = 2)
 
 curve(dUMB(x, mu= 0.50), las=1, 
       ylim = c(0,15),
-      add=TRUE, col="green")
+      add=TRUE, col="green", lwd = 2)
 
 curve(dUMB(x, mu= 1), las=1, 
       from=0, to=1, col="violetred1", las=1, 
-      ylim = c(0,15), add=TRUE)
+      ylim = c(0,15), add=TRUE, lwd = 2)
 
 curve(dUMB(x, mu= 2), ylim = c(0,15),
-      add=TRUE, col="black")
+      add=TRUE, col="black", lwd = 2)
 
 legend("topright", col=c("blue3", "red","green", "violetred1", "black"), lty=1, bty="n",
        legend=c("mu=0.10",
@@ -138,19 +137,19 @@ legend("topright", col=c("blue3", "red","green", "violetred1", "black"), lty=1, 
 
 ## The cumulative distribution function
 curve(pUMB(x, mu=0.10), from=0, to=1,
-      col="black", las=1, ylab="Cdf of the UMB")
+      col="black", las=1, ylab="Cdf of the UMB", lwd = 2)
 
 curve(pUMB(x, mu=0.25), from=0, to=1,
-      add=TRUE, col="green", las=1)
+      add=TRUE, col="green", las=1, lwd = 2)
 
 curve(pUMB(x, mu=0.50), from=0, to=1,
-      add=TRUE, col="violetred1", las=1)
+      add=TRUE, col="violetred1", las=1, lwd = 2)
 
 curve(pUMB(x, mu=0.70), from=0, to=1,
-      add=TRUE, col="red", las=1) 
+      add=TRUE, col="red", las=1, lwd = 2) 
 
 curve(pUMB(x, mu=0.90), from=0, to=1,
-      add=TRUE, col="blue3", las=1)
+      add=TRUE, col="blue3", las=1, lwd = 2)
 
 
 legend("topleft", col=c("black","green","violetred1", "red", "blue3"), lty=1, bty="n",
