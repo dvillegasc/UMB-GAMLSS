@@ -31,7 +31,12 @@ pUMB <- function(q, mu = 1, lower.tail = TRUE, log.p = FALSE) {
   erf <- function(x) 2 * pnorm(x * sqrt(2)) - 1
   
   sapply(q, function(qi) {
-    if (qi <= 0 || qi >= 1) return(if (log.p) -Inf else 0)
+    if (qi <= 0) {
+      return(if (log.p) -Inf else 0)
+    }
+    if (qi >= 1) {
+      return(if (log.p) 0 else 1)
+    }
     
     log_term <- log(1 / qi)
     erf_arg <- log_term / (sqrt(2) * mu)
