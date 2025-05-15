@@ -97,6 +97,11 @@ sapply(c(1, 2, 3, 5, 10), function(th) {
 })
 
 
+y <- rUMB(1000, mu = 1)
+estim_mu_UMB(y)
+
+
+
 #-----------------------Ejemplos de dGEG---------------------------------------
 
 dUMB(x, mu = 1, log = FALSE)
