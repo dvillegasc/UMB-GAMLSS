@@ -1,6 +1,6 @@
 #-----------------------Construccion de las funciones---------------------------------------
 
-#Esta distribución solo tiene un parametro de escala (σ).
+#Esta distribución solo tiene un parametro (μ).
 #La distribución es continua.
 #La funcion de enlace para el unico parametro que tenemos es "Log".
 
