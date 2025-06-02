@@ -64,7 +64,6 @@ UMB <- function (mu.link="log") {
                    return(d2ldm2)
                  },
                  
-
                  
                  
                  G.dev.incr = function(y, mu, ...) -2*dUMB(y, mu, log=TRUE),
