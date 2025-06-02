@@ -67,9 +67,8 @@ qUMB <- Vectorize(qUMB)
 rUMB <- function(n = 1, mu = 1) {
   if (any(mu <= 0)) stop("parameter mu must be positive!")
   u <- runif(n)
-  # Si mu es un solo valor, replicamos. Si es vector, usamos tal cual.
   if (length(mu) == 1) mu <- rep(mu, n)
-  sapply(1:n, function(i) qUMB(u[i], mu[i]))
+  sapply(1:n, function(i) qUMB(u[i],mu[i]))
 }
 
 

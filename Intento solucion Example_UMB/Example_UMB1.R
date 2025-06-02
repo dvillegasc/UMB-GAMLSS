@@ -44,8 +44,8 @@ legend("topright", lwd = 2, bty = "n",
 # ---------------------
 
 n <- 500
-b0_mu <- 1
-b1_mu <- 2
+b0_mu <- 0.1
+b1_mu <- 0.2
 true_theta <- c(b0_mu, b1_mu)
 
 # Covariable
