@@ -1,4 +1,7 @@
-UMB(mu.link = "inv")
+UMB(mu.link = "log")
+
+data1 -> url("")
+data2 -> url("")
 
 # Example 1
 # Generating some random values with
