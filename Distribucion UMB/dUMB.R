@@ -41,7 +41,7 @@ dUMB <- function(x, mu = 1, log = FALSE) {
   # log_term <- log(1/x)
   # res <- 0.5 * log(2 / pi) + 2 * log(log_term) - 3 * log(mu) - log(x) - (log_term^2) / (2 * mu^2)
 
-  res <- ifelse(x < 0 | x > 1, -99999,
+  res <- ifelse(x <= 0 | x >= 1, -99999,
                 0.5*log(2/pi)+2*log(log(1/x))-3*log(mu)-log(x)-((log(1/x))^2)/(2*mu^2))
 
   if(log)

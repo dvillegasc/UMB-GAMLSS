@@ -1,85 +1,267 @@
-UMB(mu.link = "log")
-
-data1 -> url("")
-data2 -> url("")
-
 # Example 1
-# Generating some random values with
-# known mu and sigma
-y <- rEXL(n=300, mu=0.75, sigma=1.3)
+# Generating some random values with a known mu and fitting the model.
 
-# Fitting the model
+# Seed for reproducibility
+set.seed(1234)
+
+# Generate 300 random values from the UMB distribution.
+y <- rUMB(n=300, mu=0.5)
+
+#Fit the model using gamlss.
 require(gamlss)
-mod1 <- gamlss(y~1, sigma.fo=~1, family=EXL,
+mod1 <- gamlss(y~1, family=UMB,
                control=gamlss.control(n.cyc=5000, trace=FALSE))
 
-# Extracting the fitted values for mu and sigma
+# Extracting the fitted values for mu
 # using the inverse link function
 exp(coef(mod1, what="mu"))
-exp(coef(mod1, what="sigma"))
 
 
 # Example 2
 # Generating random values for a regression model
 
-# A function to simulate a data set with Y ~ EXL
+# A function to simulate a data set with Y ~ UMB, where mu depends on x1
+
 gendat <- function(n) {
   x1 <- runif(n)
-  x2 <- runif(n)
-  mu <- exp(1.45 - 3 * x1)
-  sigma <- exp(2 - 1.5 * x2)
-  y <- rEXL(n=n, mu=mu, sigma=sigma)
-  data.frame(y=y, x1=x1, x2=x2)
+  mu <- exp(0.5 - 2 * x1)
+  y <- rUMB(n= n, mu= mu)
+  data.frame(y= y, x1= x1)
 }
 
+# Seed for reproducibility
 set.seed(1234)
-dat <- gendat(n=100)
 
-mod2 <- gamlss(y~x1, sigma.fo=~x2, 
-               family=EXL, data=dat,
-               control=gamlss.control(n.cyc=5000, trace=FALSE))
+# Generate the data
+dat <- gendat(n= 200)
+
+mod2 <- gamlss(y~ x1, family= UMB, data= dat,
+               control= gamlss.control(n.cyc=5000, trace=FALSE))
 
 summary(mod2)
 
+
 # Example 3
-# Mortality rate due to COVID-19 for 30 days (31st March to April 30, 2020)
-# recorded for the Netherlands.
-# Taken from Alomair et al. (2024) page 12.
+# The first dataset measured the concentration of air pollutant CO in Alberta, 
+# Canada from the Edmonton Central (downtown) Monitoring Unit (EDMU) station during 1995. 
+# Measurements are listed for the period 1976–1995.
+# Taken from Bicer et al. (2024) page 12.
 
-x <- c(14.918, 10.656, 12.274, 10.289, 10.832, 7.099, 5.928, 13.211, 
-       7.968, 7.584, 5.555, 6.027, 4.097, 3.611, 4.960, 7.498, 6.940, 
-       5.307, 5.048, 2.857, 2.254, 5.431, 4.462, 3.883,
-       3.461, 3.647, 1.974, 1.273, 1.416, 4.235)
 
-mod3 <- gamlss(x~1, sigma.fo=~1, family=EXL,
-               control=gamlss.control(n.cyc=5000, trace=FALSE))
+data1 <- c(0.19,0.20,0.20,0.27,0.30,
+           0.37,0.30,0.25,0.23,0.23,
+           0.26,0.23,0.19,0.21,0.20,
+           0.22,0.21,0.25,0.25,0.19) 
 
-# Extracting the fitted values for mu and sigma
+
+mod3 <- gamlss(data1 ~ 1, family= UMB, mu.link= "log",
+               control= gamlss.control(n.cyc= 5000, trace= FALSE))
+
+
+# Extracting the fitted values for mu
 # using the inverse link function
 exp(coef(mod3, what="mu"))
-exp(coef(mod3, what="sigma"))
 
-# Replicating figure 4 from Alomair et al. (2024)
-# Hist and estimated pdf
-hist(x, freq=FALSE)
-curve(dEXL(x, mu=0.4089915, sigma=2.710467), add=TRUE, 
-      col="tomato", lwd=2)
-
-# Empirical cdf and estimated ecdf
-plot(ecdf(x))
-curve(pEXL(x, mu=0.4089915, sigma=2.710467), add=TRUE, 
-      col="tomato", lwd=2)
-
-# QQplot
-qqplot(x, rEXL(n=30, mu=0.4089915, sigma=2.710467), 
-       col="tomato")
-qqline(x, distribution=function(p) qEXL(p, mu=0.4089915, sigma=2.710467))
-
-
+# Extraction of the log likelihood
+logLik(mod3)
 
 # Example 4
-# Precipitation in inches
-# Taken from Alomair et al. (2024) page 13.
+# The second data set measured air quality monitoring of the 
+# annual average concentration of the pollutant benzo(a)pyrene (BaP). 
+# The data were obtained from the Edmonton Central (downtown) Monitoring Unit (EDMU) location
+# in Alberta, Canada, in 1995.
+# Taken from Bicer et al. (2024) page 12.
 
-# Manuel
+
+data2 <- c(0.22,0.20,0.25,0.15,0.38,
+           0.18,0.52,0.27,0.27,0.27,
+           0.13,0.15,0.24,0.37,0.20) 
+
+
+mod4 <- gamlss(data2 ~ 1, family= UMB, mu.link= "log",
+               control= gamlss.control(n.cyc= 5000, trace= FALSE))
+
+
+
+# Extracting the fitted values for mu
+# using the inverse link function
+exp(coef(mod4, what="mu"))
+
+# Extraction of the log likelihood
+logLik(mod4)
+
+
+# Replicating figure 5 from Bicer et al. (2024)
+# Hist and estimated pdf of Data-I and Data-II
+mu1 <- 0.8452875 
+mu2 <- 0.8593051 
+
+par(mfrow = c(1, 2))
+
+# Data-I
+hist(data1, freq = FALSE,
+     xlim = c(0, 1.0), ylim = c(0, 10),
+     main = "Histogram of Data-I",
+     xlab = "y", ylab = "f(y)",
+     col = "burlywood1",
+     border = "darkgoldenrod4")
+
+curve(dUMB(x, mu = mu1), add = TRUE, 
+      col = "blue", lwd = 2)
+
+legend("topright", legend = c("UMB"), 
+       col = c("blue"), lwd = 2, bty = "n")
+
+# Data-II
+hist(data2, freq = FALSE,
+     xlim = c(0, 1.0), ylim = c(0, 6),
+     main = "Histogram of Data-II",
+     xlab = "y", ylab = "f(y)",
+     col = "burlywood1",
+     border = "darkgoldenrod4")
+
+curve(dUMB(x, mu = mu2), add = TRUE, 
+      col = "blue", lwd = 2)
+
+legend("topright", 
+       legend = c("UMB"), 
+       col = c("blue"), 
+       lwd = 2, 
+       bty = "n")
+
+par(mfrow = c(1, 1))
+
+# Example 5
+# The third dataset measured the concentration of sulphate 
+# in Calgary from 31 different periods during 1995.
+# Taken from Bicer et al. (2024) page 13.
+
+
+data3 <- c(0.048,0.013,0.040,0.082,0.073,0.732,0.302,0.728,0.305,0.322,
+           0.045,0.261,0.192,0.357,0.022,0.143,0.208,0.104,0.330,0.453,
+           0.135,0.114,0.049,0.011,0.008,0.037,0.034,0.015,0.028,0.069,0.029) 
+
+
+mod5 <- gamlss(data3 ~ 1, family= UMB, mu.link= "log",
+               control= gamlss.control(n.cyc= 5000, trace= FALSE))
+
+
+
+# Extracting the fitted values for mu
+# using the inverse link function
+exp(coef(mod5, what="mu"))
+
+# Extraction of the log likelihood
+logLik(mod5)
+
+# Example 6
+# The fourth dataset measured the concentration of pollutant CO in Alberta, Canada
+# from the Calgary northwest (residential) monitoring unit (CRMU) station during 1995.
+# Measurements are listed  for the period 1976-95.
+# Taken from Bicer et al. (2024) page 13.
+
+
+data4 <- c(0.16,0.19,0.24,0.25,0.30,0.41,0.40,
+           0.33,0.23,0.27,0.30,0.32,0.26,0.25,
+           0.22,0.22,0.18,0.18,0.20,0.23) 
+
+
+mod6 <- gamlss(data4 ~ 1, family= UMB, mu.link= "log",
+               control= gamlss.control(n.cyc= 5000, trace= FALSE))
+
+
+
+# Extracting the fitted values for mu
+# using the inverse link function
+exp(coef(mod6, what="mu"))
+
+# Extraction of the log likelihood
+logLik(mod6)
+
+
+# Replicating figure 6 from Bicer et al. (2024)
+# Hist and estimated pdf of Data-III and Data-IV
+mu3 <- 1.582003
+mu4 <- 0.8161202 
+
+par(mfrow = c(1, 2))
+
+# Data-III
+hist(data3, freq = FALSE,
+     xlim = c(0, 1.0), ylim = c(0, 10),
+     main = "Histogram of Data-III",
+     xlab = "y", ylab = "f(y)",
+     col = "burlywood1",
+     border = "darkgoldenrod4")
+
+curve(dUMB(x, mu = mu3), add = TRUE, 
+      col = "blue", lwd = 2)
+
+legend("topright", legend = c("UMB"), 
+       col = c("blue"), lwd = 2, bty = "n")
+
+# Data-IV
+hist(data4, freq = FALSE,
+     xlim = c(0, 1.0), ylim = c(0, 6),
+     main = "Histogram of Data-IV",
+     xlab = "y", ylab = "f(y)",
+     col = "burlywood1",
+     border = "darkgoldenrod4")
+
+curve(dUMB(x, mu = mu4), add = TRUE, 
+      col = "blue", lwd = 2)
+
+legend("topright", 
+       legend = c("UMB"), 
+       col = c("blue"), 
+       lwd = 2, 
+       bty = "n")
+
+par(mfrow = c(1, 1))
+
+
+# David Villegas Ceballos
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Load the library
+library(leaflet)
+
+# Note: if you do not already installed it, install it with:#install.packages("leaflet")
+
+# Background 1: NASA
+m <- leaflet() %>% 
+  addTiles() %>% 
+  setView( lng = 2.34, lat = 48.85, zoom = 5 ) %>% 
+  addProviderTiles("NASAGIBS.ViirsEarthAtNight2012")
+m
+
+# Background 2: World Imagery
+m <- leaflet() %>% 
+  addTiles() %>% 
+  setView( lng = 2.34, lat = 48.85, zoom = 3 ) %>% 
+  addProviderTiles("Esri.WorldImagery")
+m
+
+# save the widget in a html file if needed.
+# library(htmlwidgets)
+# saveWidget(m, file=paste0( getwd(), "/HtmlWidget/backgroundMapTile.html", width="1000px"))
+
+#install.packages("paletteer")
+library(paletteer)
+
+color <- paletteer::paletteer_d("lisa::FridaKahlo")
 

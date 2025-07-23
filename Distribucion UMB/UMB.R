@@ -36,7 +36,7 @@
 UMB <- function (mu.link="log") {
 
   mstats <- checklink("mu.link", "Unit Maxwell-Boltzmann",
-                      substitute(mu.link), c("log", "inverse", "own"))
+                      substitute(mu.link), c("log", "inverse", "identity", "own"))
 
   structure(list(family=c("UMB", "Unit Maxwell-Boltzmann"),
                  parameters=list(mu=TRUE),
