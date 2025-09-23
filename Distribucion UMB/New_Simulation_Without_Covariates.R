@@ -88,17 +88,13 @@ p1 <- ggplot(dat, aes(x=n, y=bias_mu, colour=case)) +
 
 p1
 
-ggsave(filename="Figs/bias_simul1.pdf", width=12, height=6,
-       plot=p1)
-
-
 p2 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
   geom_line() + 
   ylab(expression(paste("MSE for ", mu)))
 
 p2
 
-ggsave(filename="Figs/mse_simul1.pdf", width=12, height=6,
+ggsave(filename="Figs/bias_mse_simul1.pdf", width=12, height=6,
        plot=p1+p2)
 
 
