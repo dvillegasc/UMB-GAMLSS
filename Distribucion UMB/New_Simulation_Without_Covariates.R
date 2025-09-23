@@ -84,7 +84,7 @@ dat
 p1 <- ggplot(dat, aes(x=n, y=bias_mu, colour=case)) +
   geom_line() + 
   ylab(expression(paste("Bias for ", mu))) +
-  ylim(min(dat$bias_mu), 0)
+  ylim(min(dat$bias_mu), 0.0019)
 
 p1
 
