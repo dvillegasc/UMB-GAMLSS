@@ -10,12 +10,12 @@ library("parSim")
 
 parSim(
   ### SIMULATION CONDITIONS
-  n = c(50, 100, 500, 1000),
+  n = c(30, 50, 100, 200),
   mu = c(0.25, 0.5, 1, 2),
   
   reps = 1000,                         # repetitions
   write = TRUE,                       # Writing to a file
-  name = "Simuls/sim_without_covariates_07",  # Name of the file
+  name = "Simuls/sim_without_covariates_nP",  # Name of the file
   nCores = 1,                         # Number of cores to use
   
   expression = {
@@ -94,7 +94,7 @@ p2 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
 
 p2
 
-ggsave(filename="Figs/bias_mse_simul1.pdf", width=12, height=6,
+ggsave(filename="Figs/bias_mse_simul1nP.pdf", width=12, height=6,
        plot=p1+p2)
 
 
