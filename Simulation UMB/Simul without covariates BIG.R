@@ -10,12 +10,12 @@ library("parSim")
 
 parSim(
   ### SIMULATION CONDITIONS
-  n = c(50, 100, 150, 200, 250, 300),
+  n = seq(from= 200, to= 1200, by= 200),
   mu = c(0.25, 0.5, 1, 2),
   
   reps = 1000,                         # repetitions
   write = TRUE,                       # Writing to a file
-  name = "Simuls/sim_without_covariates_nA",  # Name of the file
+  name = "Simuls/sim_without_covariates_BIG",  # Name of the file
   nCores = 1,                         # Number of cores to use
   
   expression = {
@@ -45,7 +45,7 @@ parSim(
 
 # To load the results -----------------------------------------------------
 
-archivos <- list.files(pattern = "^sim_without_covariates_07.*\\.txt$", 
+archivos <- list.files(pattern = "^sim_without_covariates_BIG.*\\.txt$", 
                        path="Simuls",
                        full.names = TRUE)
 
@@ -98,13 +98,13 @@ p2 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
 
 p2
 
-ggsave(filename="Figs/bias_mse_simul1nA.pdf", width=12, height=6,
+ggsave(filename="Figs/bias_mse_simulBIG.pdf", width=12, height=6,
        plot=p1+p2)
 
-ggplot(dat, aes(x = n, y = Sbias_mu, colour = case)) +
-  geom_line() +
-  ylab(expression(paste("Bias Squared for ", mu)))
-
+p3 <- ggplot(dat, aes(x = n, y = Sbias_mu, colour = case)) +
+      geom_line() +
+      ylab(expression(paste("Bias Squared for ", mu)))
+p3
 
 # Tables
 

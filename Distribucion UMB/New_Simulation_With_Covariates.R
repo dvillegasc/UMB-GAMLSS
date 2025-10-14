@@ -11,18 +11,26 @@ library("parSim")
 
 gendat <- function(n) {
   x1 <- runif(n)
-  mu    <- exp(0.33 + 0.11 * x1) # 1.5 approximately
+  mu    <- exp(0.3 + 0.2 * x1) # 1.5 approximately
   y <- rUMB(n=n, mu=mu)
   data.frame(y=y, x1=x1)
 }
 
 parSim(
   ### SIMULATION CONDITIONS
+<<<<<<< HEAD
+  n = seq(from= 200, to= 1200, by= 200),
+  
+  reps = 1000,                      # repetitions
+  write = TRUE,                    # Writing to a file
+  name = "Simuls/sim_with_covariates_BIG",  # Name of the file
+=======
   n = c(50, 100, 150, 200, 250, 300),
   
   reps = 1000,                      # repetitions
   write = TRUE,                    # Writing to a file
   name = "Simuls/sim_with_covariates_nA",  # Name of the file
+>>>>>>> ea670268650297e9262bfaad1d06385674e4a883
   nCores = 1,                      # Number of cores to use
   
   expression = {
@@ -48,7 +56,7 @@ parSim(
 
 # To load the results -----------------------------------------------------
 
-archivos <- list.files(pattern = "^sim_with_cov.*\\.txt$", 
+archivos <- list.files(pattern = "^sim_with_covariates_BIG.*\\.txt$", 
                        path="Simuls",
                        full.names = TRUE)
 archivos
@@ -73,11 +81,11 @@ trim <- 0.10
 dat <- datos %>% group_by(n) %>% 
   summarise(nobs = n(),
             
-            bias_b0 = mean(beta_0_hat - (0.33), trim=trim, na.rm=TRUE),
-            bias_b1 = mean(beta_1_hat - (0.11), trim=trim, na.rm=TRUE),
+            bias_b0 = mean(beta_0_hat - (0.3), trim=trim, na.rm=TRUE),
+            bias_b1 = mean(beta_1_hat - (0.2), trim=trim, na.rm=TRUE),
             
-            mse_b0 = mean((beta_0_hat - (0.33))^2, trim=trim, na.rm=TRUE),
-            mse_b1 = mean((beta_1_hat - (0.11))^2, trim=trim, na.rm=TRUE)
+            mse_b0 = mean((beta_0_hat - (0.3))^2, trim=trim, na.rm=TRUE),
+            mse_b1 = mean((beta_1_hat - (0.2))^2, trim=trim, na.rm=TRUE)
             
   )
 
@@ -117,7 +125,11 @@ p2 <- ggplot(d, aes(x=n, y=value, colour=Estimator)) +
 
 p2
 
+<<<<<<< HEAD
+ggsave(filename="Figs/bias_mse_simul_BIGcovariates.pdf", width=12, height=6,
+=======
 ggsave(filename="Figs/bias_mse_simul2nA.pdf", width=12, height=6,
+>>>>>>> ea670268650297e9262bfaad1d06385674e4a883
        plot=p1+p2)
 
 

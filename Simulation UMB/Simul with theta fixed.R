@@ -11,11 +11,11 @@ library("parSim")
 parSim(
   ### SIMULATION CONDITIONS
   n = c(50, 100, 150, 200, 250, 300),
-  mu = c(0.25, 0.5, 1, 2),
+  mu = c(1),
   
   reps = 1000,                         # repetitions
   write = TRUE,                       # Writing to a file
-  name = "Simuls/sim_without_covariates_nA",  # Name of the file
+  name = "Simuls/sim_without_covariates_theta1",  # Name of the file
   nCores = 1,                         # Number of cores to use
   
   expression = {
@@ -45,7 +45,7 @@ parSim(
 
 # To load the results -----------------------------------------------------
 
-archivos <- list.files(pattern = "^sim_without_covariates_07.*\\.txt$", 
+archivos <- list.files(pattern = "^sim_without_covariates_theta1.*\\.txt$", 
                        path="Simuls",
                        full.names = TRUE)
 
@@ -55,10 +55,7 @@ lista_datos <- lapply(archivos, read.table, header = TRUE,
                       sep = "", stringsAsFactors = FALSE)
 datos <- do.call(rbind, lista_datos)
 
-datos$case <- with(datos, ifelse(mu==0.25, 1, 
-                                 ifelse(mu==0.5, 2,
-                                        ifelse(mu==1, 3,
-                                               ifelse(mu==2, 4, 5)))))
+datos$case <- with(datos, ifelse(mu==1, 1, 2))
 
 datos$case <- as.factor(datos$case)
 
@@ -74,14 +71,10 @@ trim <- 0.10 # percentage of values to be trimmed
 dat <- datos %>% group_by(n, mu, case) %>% 
   summarise(nobs = n(),
             mean_mu = mean(mu_hat, trim=trim, na.rm=TRUE),
-            mse_mu = mean((mu-mu_hat)^2, trim=trim, na.rm=TRUE),
+            mse_mu = mean((mu_hat - mu)^2, trim=trim, na.rm=TRUE),
             bias_mu = mean(mu_hat-mu, trim=trim, na.rm=TRUE),
   )
 
-dat
-
-dat <- dat %>%
-  mutate(Sbias_mu = bias_mu^2)
 dat
 
 # Plots
@@ -98,12 +91,8 @@ p2 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
 
 p2
 
-ggsave(filename="Figs/bias_mse_simul1nA.pdf", width=12, height=6,
+ggsave(filename="Figs/bias_mse_simultheta1.pdf", width=12, height=6,
        plot=p1+p2)
-
-ggplot(dat, aes(x = n, y = Sbias_mu, colour = case)) +
-  geom_line() +
-  ylab(expression(paste("Bias Squared for ", mu)))
 
 
 # Tables
