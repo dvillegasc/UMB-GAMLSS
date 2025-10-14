@@ -98,8 +98,11 @@ p2 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
 
 p2
 
-ggsave(filename="Figs/bias_mse_simulBIG.png", width=12, height=6,
-       plot=p1+p2)
+#ggsave(filename="Figs/bias_mse_simulBIG.png", width=12, height=6,
+#       plot=p1+p2)
+
+ggsave(filename="Figs/bias_mse_simul_WithotCovariates.png", width = 12, height = 6, 
+       units = "in", plot=p1+p2)
 
 #p3 <- ggplot(dat, aes(x = n, y = Sbias_mu, colour = case)) +
       #geom_line() +
@@ -120,7 +123,7 @@ dat <- datos %>% group_by(n, mu) %>%
 dat
 
 
-dat |> filter(mu == 1) |> 
+dat |> filter(mu == 0.25) |> 
   select(mean_mu, ab_mu, mse_mu) -> a
 a[, -1]
 

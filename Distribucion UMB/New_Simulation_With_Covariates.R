@@ -89,6 +89,8 @@ dat <- datos %>% group_by(n) %>%
 
 dat
 
+#png("Bias_Sim_WithCovariates.png", width = 8, height = 4.5, units = "in", res = 300)
+
 # Legend and colores
 leyenda <- c(expression(hat(beta)[0]), 
              expression(hat(beta)[1]))
@@ -123,7 +125,10 @@ p2 <- ggplot(d, aes(x=n, y=value, colour=Estimator)) +
 
 p2
 
-ggsave(filename="Figs/bias_mse_simul_BIGcovariates.png", width=12, height=6,
-       plot=p1+p2)
+
+#dev.off()
+
+ggsave(filename="Figs/bias_mse_simul_WithCovariates.png", width = 12, height = 6, 
+       units = "in", plot=p1+p2)
 
 
