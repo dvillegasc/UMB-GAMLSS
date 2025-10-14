@@ -80,31 +80,31 @@ dat <- datos %>% group_by(n, mu, case) %>%
 
 dat
 
-dat <- dat %>%
-  mutate(Sbias_mu = bias_mu^2)
-dat
+#dat <- dat %>%
+#  mutate(Sbias_mu = bias_mu^2)
+#dat
 
 # Plots
 p1 <- ggplot(dat, aes(x=n, y=bias_mu, colour=case)) +
   geom_line() + 
-  ylab(expression(paste("Bias for ", mu))) +
+  ylab(expression(paste("Bias for ", theta))) +
   ylim(min(dat$bias_mu), 0.0019)
 
 p1
 
 p2 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
   geom_line() + 
-  ylab(expression(paste("MSE for ", mu)))
+  ylab(expression(paste("MSE for ", theta)))
 
 p2
 
-ggsave(filename="Figs/bias_mse_simulBIG.pdf", width=12, height=6,
+ggsave(filename="Figs/bias_mse_simulBIG.png", width=12, height=6,
        plot=p1+p2)
 
-p3 <- ggplot(dat, aes(x = n, y = Sbias_mu, colour = case)) +
-      geom_line() +
-      ylab(expression(paste("Bias Squared for ", mu)))
-p3
+#p3 <- ggplot(dat, aes(x = n, y = Sbias_mu, colour = case)) +
+      #geom_line() +
+      #ylab(expression(paste("Bias Squared for ", mu)))
+#p3
 
 # Tables
 

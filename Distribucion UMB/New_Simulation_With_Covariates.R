@@ -18,19 +18,17 @@ gendat <- function(n) {
 
 parSim(
   ### SIMULATION CONDITIONS
-<<<<<<< HEAD
+
   n = seq(from= 200, to= 1200, by= 200),
   
   reps = 1000,                      # repetitions
   write = TRUE,                    # Writing to a file
   name = "Simuls/sim_with_covariates_BIG",  # Name of the file
-=======
   n = c(50, 100, 150, 200, 250, 300),
   
   reps = 1000,                      # repetitions
   write = TRUE,                    # Writing to a file
   name = "Simuls/sim_with_covariates_nA",  # Name of the file
->>>>>>> ea670268650297e9262bfaad1d06385674e4a883
   nCores = 1,                      # Number of cores to use
   
   expression = {
@@ -125,11 +123,7 @@ p2 <- ggplot(d, aes(x=n, y=value, colour=Estimator)) +
 
 p2
 
-<<<<<<< HEAD
-ggsave(filename="Figs/bias_mse_simul_BIGcovariates.pdf", width=12, height=6,
-=======
-ggsave(filename="Figs/bias_mse_simul2nA.pdf", width=12, height=6,
->>>>>>> ea670268650297e9262bfaad1d06385674e4a883
+ggsave(filename="Figs/bias_mse_simul_BIGcovariates.png", width=12, height=6,
        plot=p1+p2)
 
 
