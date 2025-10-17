@@ -19,16 +19,12 @@ gendat <- function(n) {
 parSim(
   ### SIMULATION CONDITIONS
 
-  n = seq(from= 200, to= 1200, by= 200),
+  #n = seq(from= 500, to= 700, by= 200),
+  n = c(50, 100, 500, 1000),
   
-  reps = 1000,                      # repetitions
+  reps = 10000,                      # repetitions
   write = TRUE,                    # Writing to a file
-  name = "Simuls/sim_with_covariates_BIG",  # Name of the file
-  n = c(50, 100, 150, 200, 250, 300),
-  
-  reps = 1000,                      # repetitions
-  write = TRUE,                    # Writing to a file
-  name = "Simuls/sim_with_covariates_nA",  # Name of the file
+  name = "Simuls/sim_with_covariates_LASTBIG",  # Name of the file
   nCores = 1,                      # Number of cores to use
   
   expression = {
@@ -54,7 +50,7 @@ parSim(
 
 # To load the results -----------------------------------------------------
 
-archivos <- list.files(pattern = "^sim_with_covariates_BIG.*\\.txt$", 
+archivos <- list.files(pattern = "^sim_with_covariates_LASTBIG.*\\.txt$", 
                        path="Simuls",
                        full.names = TRUE)
 archivos
@@ -126,9 +122,19 @@ p2 <- ggplot(d, aes(x=n, y=value, colour=Estimator)) +
 p2
 
 
+p1_final <- p1 + theme_bw(base_size = 13)
+p2_final <- p2 + theme_bw(base_size = 13)
+
+# Guardar el archivo PDF con las dimensiones correctas
+ggsave(filename = "Figs/bias_mse_simul_COV_FINAL.pdf", 
+       plot = p1_final + p2_final, 
+       width = 7.5, 
+       height = 3.5, 
+       units = "in")
+
 #dev.off()
 
-ggsave(filename="Figs/bias_mse_simul_WithCovariates.png", width = 12, height = 6, 
-       units = "in", plot=p1+p2)
+#ggsave(filename="Figs/bias_mse_simul_WithCAnalizeError.png", width = 12, height = 6, 
+       #units = "in", plot=p1+p2)
 
 

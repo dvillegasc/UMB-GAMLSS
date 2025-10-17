@@ -10,12 +10,13 @@ library("parSim")
 
 parSim(
   ### SIMULATION CONDITIONS
-  n = seq(from= 500, to= 700, by= 200),
+  #n = seq(from= 500, to= 700, by= 200)
+  n = c(50, 100, 500, 1000),
   mu = c(0.25, 0.5, 1, 2),
   
   reps = 5000,                         # repetitions
   write = TRUE,                       # Writing to a file
-  name = "Simuls/sim_without_covariates_AnalizeError",  # Name of the file
+  name = "Simuls/sim_without_covariates_LAST",  # Name of the file
   nCores = 1,                         # Number of cores to use
     
   expression = {
@@ -45,7 +46,7 @@ parSim(
 
 # To load the results -----------------------------------------------------
 
-archivos <- list.files(pattern = "^sim_without_covariates_AnalizeError.*\\.txt$", 
+archivos <- list.files(pattern = "^sim_without_covariates_LAST.*\\.txt$", 
                        path="Simuls",
                        full.names = TRUE)
 
@@ -98,11 +99,21 @@ p2 <- ggplot(dat, aes(x=n, y=mse_mu, colour=case)) +
 
 p2
 
+p1_final <- p1 + theme_bw(base_size = 13)
+p2_final <- p2 + theme_bw(base_size = 13)
+
+# Guardar el archivo PDF con las dimensiones correctas
+ggsave(filename = "Figs/bias_mse_simul_WCOV_FINAL.pdf", 
+       plot = p1_final + p2_final, 
+       width = 7.5, 
+       height = 3.5, 
+       units = "in")
+
 #ggsave(filename="Figs/bias_mse_simulBIG.png", width=12, height=6,
 #       plot=p1+p2)
 
-ggsave(filename="Figs/bias_mse_simul_WithotCAnalizeError.png", width = 12, height = 6, 
-       units = "in", plot=p1+p2)
+#ggsave(filename="Figs/bias_mse_simul_WithotCAnalizeError.png", width = 12, height = 6, 
+       #units = "in", plot=p1+p2)
 
 #p3 <- ggplot(dat, aes(x = n, y = Sbias_mu, colour = case)) +
 #geom_line() +
